@@ -1,0 +1,23 @@
+cockpit-cli
+Copyright (c) 2026 Fracizz
+
+This project is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+It is derived from Cockpit Tools by jlcodes99:
+https://github.com/jlcodes99/cockpit-tools
+
+Cockpit Tools is licensed under CC BY-NC-SA 4.0. This repository reimplements the account import and local login switch in Go.
+
+---
+
+cockpit-cli
+Copyright (c) 2026 Fracizz
+
+本项目采用知识共享 署名-非商业性使用-相同方式共享 4.0 国际许可协议。
+https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans
+
+本项目派生自 jlcodes99 的 Cockpit Tools：
+https://github.com/jlcodes99/cockpit-tools
+
+Cockpit Tools 使用 CC BY-NC-SA 4.0。本仓库用 Go 重新实现了账号导入和本机登录切换。

@@ -4,6 +4,8 @@
 
 Import a [Cockpit Tools](https://github.com/jlcodes99/cockpit-tools) account-share JSON file and switch the local Codex, Cursor, or Antigravity login. Field mapping lives in [`mappings/platforms.json`](mappings/platforms.json), separate from the switch code, so later syncs can update that file.
 
+This program is derived from [Cockpit Tools](https://github.com/jlcodes99/cockpit-tools) by [jlcodes99](https://github.com/jlcodes99).
+
 English is the default language for this repository and its releases.
 
 ## Build
@@ -35,4 +37,9 @@ Accounts are stored under `~/.cockpit-cli`. The index does not contain tokens. `
 
 ## License
 
-[MIT](LICENSE)
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (Attribution-NonCommercial-ShareAlike). Copyright (c) 2026 Fracizz.
+
+Adapted from [jlcodes99/cockpit-tools](https://github.com/jlcodes99/cockpit-tools). That project uses the same license. Details are in [NOTICE](NOTICE).
+
+- Personal study, research, and other non-commercial use and modification are allowed when you keep the attribution and share adaptations under this license.
+- Commercial use requires a separate license.
