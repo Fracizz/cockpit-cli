@@ -1,0 +1,185 @@
+{
+  "schema": "cockpit-cli.platform-map",
+  "version": 1,
+  "source": {
+    "repo": "https://github.com/jlcodes99/cockpit-tools",
+    "commit": "be24ce6171279741c2cd141bc02bd9f380f4b67c",
+    "notes": "Field names follow Cockpit Tools export JSON and the files written on switch. Update this file when those writers change, then keep the CLI readers on the same keys."
+  },
+  "bundle": {
+    "schema": "cockpit-tools.account-transfer",
+    "version": 1,
+    "platforms_key": "platforms",
+    "payload_keys": ["exported_data", "data", "accounts"]
+  },
+  "platforms": {
+    "codex": {
+      "aliases": ["codex"],
+      "bundle_keys": ["codex"],
+      "canonical": {
+        "email": ["email"],
+        "id": ["id"],
+        "auth_mode": ["auth_mode"],
+        "id_token": ["tokens.id_token", "id_token"],
+        "access_token": ["tokens.access_token", "access_token"],
+        "refresh_token": ["tokens.refresh_token", "refresh_token"],
+        "account_id": ["tokens.account_id", "account_id"],
+        "openai_api_key": ["openai_api_key", "OPENAI_API_KEY"],
+        "personal_access_token": ["personal_access_token"],
+        "plan_type": ["plan_type", "auth_file_plan_type"],
+        "agent_identity": ["agent_identity", "agentIdentity"]
+      },
+      "runtime": {
+        "kind": "codex_auth_json",
+        "default_target": "wsl",
+        "targets": {
+          "wsl": {
+            "distro": "Ubuntu",
+            "user": "root",
+            "auth_json": "/root/.codex/auth.json",
+            "config_toml": "/root/.codex/config.toml",
+            "account_index": "/root/.antigravity_cockpit/codex_accounts.json",
+            "restart": "wsl -d Ubuntu -u root -- bash /root/.codex/skills/wsl-cockpit-tools/scripts/sync-wsl-codex-account.sh"
+          },
+          "windows": {
+            "auth_json": "%USERPROFILE%/.codex/auth.json",
+            "config_toml": "%USERPROFILE%/.codex/config.toml"
+          },
+          "linux": {
+            "auth_json": "/root/.codex/auth.json",
+            "config_toml": "/root/.codex/config.toml",
+            "account_index": "/root/.antigravity_cockpit/codex_accounts.json",
+            "account_dir": "/root/.antigravity_cockpit/codex_accounts",
+            "storage_key": "/root/.antigravity_cockpit/secure-account-storage.key",
+            "restart": "bash /root/.codex/skills/wsl-cockpit-tools/scripts/restart-wsl-codex.sh"
+          }
+        },
+        "auth_json": {
+          "auth_mode": "chatgpt",
+          "api_key_auth_mode": "apikey",
+          "oauth_clears": ["personal_access_token", "agent_identity"],
+          "preserve_unknown_keys": true,
+          "tokens": {
+            "id_token": "credentials.id_token",
+            "access_token": "credentials.access_token",
+            "refresh_token": "credentials.refresh_token",
+            "account_id": "credentials.account_id"
+          },
+          "account_id_claim": "https://api.openai.com/auth.chatgpt_account_id",
+          "forced_login_method_key": "forced_login_method",
+          "forced_login_method_oauth": "chatgpt",
+          "forced_login_method_api": "api"
+        }
+      }
+    },
+    "cursor": {
+      "aliases": ["cursor"],
+      "bundle_keys": ["cursor"],
+      "canonical": {
+        "email": ["email", "cachedEmail"],
+        "id": ["id"],
+        "access_token": ["access_token", "accessToken", "cursor_auth_raw.accessToken"],
+        "refresh_token": ["refresh_token", "refreshToken", "cursor_auth_raw.refreshToken"],
+        "auth_id": ["auth_id", "authId", "cursor_auth_raw.authId"],
+        "membership_type": ["membership_type", "stripeMembershipType", "cursor_auth_raw.stripeMembershipType"],
+        "subscription_status": ["subscription_status", "stripeSubscriptionStatus", "cursor_auth_raw.stripeSubscriptionStatus"],
+        "sign_up_type": ["sign_up_type", "cachedSignUpType", "cursor_auth_raw.cachedSignUpType"]
+      },
+      "runtime": {
+        "kind": "vscdb_items",
+        "default_target": "windows",
+        "targets": {
+          "windows": {
+            "state_db": "%APPDATA%/Cursor/User/globalStorage/state.vscdb"
+          },
+          "linux": {
+            "state_db": "$HOME/.config/Cursor/User/globalStorage/state.vscdb"
+          },
+          "macos": {
+            "state_db": "$HOME/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
+          }
+        },
+        "table": "ItemTable",
+        "items": [
+          {"key": "cursorAuth/accessToken", "from": "access_token", "required": true},
+          {"key": "cursorAuth/refreshToken", "from": "refresh_token"},
+          {"key": "cursorAuth/cachedEmail", "from": "email", "required": true},
+          {"key": "cursorAuth/authId", "from": "auth_id"},
+          {"key": "cursorAuth/stripeMembershipType", "from": "membership_type"},
+          {"key": "cursorAuth/stripeSubscriptionStatus", "from": "subscription_status"},
+          {"key": "cursorAuth/cachedSignUpType", "from": "sign_up_type"},
+          {"key": "cursor.accessToken", "from": "access_token", "required": true},
+          {"key": "cursor.email", "from": "email", "required": true}
+        ]
+      }
+    },
+    "antigravity": {
+      "aliases": ["antigravity", "antigravity_ide", "反重力"],
+      "bundle_keys": ["antigravity", "antigravity_ide"],
+      "product_by_bundle_key": {
+        "antigravity": "app",
+        "antigravity_ide": "ide"
+      },
+      "canonical": {
+        "email": ["email"],
+        "id": ["id"],
+        "access_token": ["token.access_token", "access_token"],
+        "refresh_token": ["token.refresh_token", "refresh_token"],
+        "expiry_timestamp": ["token.expiry_timestamp", "expiry_timestamp"],
+        "expires_in": ["token.expires_in", "expires_in"],
+        "id_token": ["token.id_token", "id_token"],
+        "project_id": ["token.project_id", "quota.project_id", "project_id"],
+        "is_gcp_tos": ["token.is_gcp_tos", "quota.is_gcp_tos", "is_gcp_tos"]
+      },
+      "runtime": {
+        "kind": "antigravity_unified_state",
+        "default_target": "windows",
+        "state_db_relative": "User/globalStorage/state.vscdb",
+        "targets": {
+          "windows": {
+            "user_data_dirs": ["%APPDATA%/Antigravity IDE", "%APPDATA%/Antigravity"]
+          },
+          "linux": {
+            "user_data_dirs": ["$HOME/.config/Antigravity IDE", "$HOME/.config/Antigravity"]
+          },
+          "macos": {
+            "user_data_dirs": [
+              "$HOME/Library/Application Support/Antigravity IDE",
+              "$HOME/Library/Application Support/Antigravity"
+            ]
+          }
+        },
+        "products": {
+          "ide": ["Antigravity IDE"],
+          "app": ["Antigravity"]
+        },
+        "table": "ItemTable",
+        "items": {
+          "oauth_token": "antigravityUnifiedStateSync.oauthToken",
+          "onboarding": "antigravityOnboarding",
+          "enterprise_preferences": "antigravityUnifiedStateSync.enterprisePreferences"
+        },
+        "protobuf": {
+          "oauth_token_info": {
+            "access_token": 1,
+            "token_type": 2,
+            "refresh_token": 3,
+            "expiry": 4,
+            "id_token": 5,
+            "is_gcp_tos": 6,
+            "token_type_value": "Bearer"
+          },
+          "unified_topic_entry_field": 1,
+          "sentinel_key_field": 1,
+          "row_field": 2,
+          "row_value_field": 1,
+          "oauth_sentinel": "oauthTokenInfoSentinelKey",
+          "auth_state_sentinel": "authStateWithContextSentinelKey",
+          "enterprise_sentinel": "enterpriseGcpProjectId",
+          "string_value_field": 3,
+          "ignored_project_id": "aicode-consumers"
+        }
+      }
+    }
+  }
+}
