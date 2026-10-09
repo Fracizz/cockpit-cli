@@ -8,6 +8,14 @@
 
 本仓库和 Release 说明默认使用英文，此页为中文版本。
 
+## 下载
+
+GitHub Actions 会把压缩包挂到每个 Release。本机没有 `cockpit-cli` 时，skill 会下载对应的压缩包。
+
+https://github.com/Fracizz/cockpit-cli/releases/latest
+
+Windows 文件名是 `cockpit-cli_<version>_<os>_<arch>.zip`，Linux 和 macOS 是 `.tar.gz`，同时有 `cockpit-cli_<version>_checksums.txt`。
+
 ## 构建
 
 ```powershell

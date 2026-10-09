@@ -8,6 +8,14 @@ This program is derived from [Cockpit Tools](https://github.com/jlcodes99/cockpi
 
 English is the default language for this repository and its releases.
 
+## Download
+
+GitHub Actions attaches archives to each release. The skill downloads the matching archive when `cockpit-cli` is not on `PATH`.
+
+https://github.com/Fracizz/cockpit-cli/releases/latest
+
+Assets are named `cockpit-cli_<version>_<os>_<arch>.zip` on Windows and `.tar.gz` on Linux and macOS, plus `cockpit-cli_<version>_checksums.txt`.
+
 ## Build
 
 ```powershell

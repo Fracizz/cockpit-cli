@@ -3,6 +3,7 @@ name: cockpit-cli
 description: >-
   Drive the cockpit-cli binary to import, export, list, and switch Codex,
   Cursor, and Antigravity (反重力) logins from Cockpit Tools share JSON.
+  Download the matching GitHub Release archive when the binary is missing.
   Use when the user mentions cockpit-cli, Cockpit Tools accounts, 切号,
   导入, 导出, WSL Codex, Codex quota, Cursor login, or Antigravity login.
 ---
@@ -13,19 +14,22 @@ Run the `cockpit-cli` binary. Do not reimplement account files, decryption, or p
 
 ## Find the binary
 
-Use the first one that exists:
+Use `cockpit-cli` on `PATH` when it exists. Otherwise download the latest release archive for this machine into `~/.cockpit-cli/bin` and run that file. Build from source only when the release has no matching archive.
 
-1. `cockpit-cli` on `PATH`
-2. Inside WSL Ubuntu, as root: `/usr/local/bin/cockpit-cli`
-3. A `cockpit-cli` or `cockpit-cli.exe` already built in the source tree
-
-If none exists, build from this repository:
+Repository: `Fracizz/cockpit-cli`. Archives are `cockpit-cli_<version>_<os>_<arch>.zip` on Windows and `.tar.gz` elsewhere. `<version>` is the tag without `v`. `os` is `windows`, `linux`, or `darwin`. `arch` is `amd64` or `arm64`. The same release includes `cockpit-cli_<version>_checksums.txt`.
 
 ```bash
-CGO_ENABLED=0 go build -ldflags "-s -w" -o cockpit-cli .
+mkdir -p "$HOME/.cockpit-cli/bin"
+gh release download --repo Fracizz/cockpit-cli \
+  --dir "$HOME/.cockpit-cli/bin" \
+  --pattern "cockpit-cli_*_${OS}_${ARCH}.${EXT}" \
+  --pattern "cockpit-cli_*_checksums.txt" \
+  --clobber
 ```
 
-On Windows PowerShell, set `GOOS` and `GOARCH` only for a cross build, then remove them.
+`${EXT}` is `zip` on Windows and `tar.gz` elsewhere. Inside WSL, use `linux`, not `windows`. Without `gh`, download `https://github.com/Fracizz/cockpit-cli/releases/latest/download/<asset>`.
+
+Compare the archive sha256 with the checksum file before extracting. The Windows zip contains `cockpit-cli.exe`. Other archives contain `cockpit-cli`; mark that file executable. Leave the extracted binary in `~/.cockpit-cli/bin` and call it by that path.
 
 ## Targets
 
