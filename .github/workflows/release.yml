@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to package
+        required: true
+        default: v0.1.1
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build release archives
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          set -euo pipefail
+          version="${RELEASE_TAG#v}"
+          mkdir -p dist
+          targets=(
+            "linux amd64"
+            "linux arm64"
+            "darwin amd64"
+            "darwin arm64"
+            "windows amd64"
+            "windows arm64"
+          )
+          for pair in "${targets[@]}"; do
+            read -r goos goarch <<<"$pair"
+            bin="cockpit-cli"
+            if [ "$goos" = "windows" ]; then
+              bin="cockpit-cli.exe"
+            fi
+            CGO_ENABLED=0 GOOS="$goos" GOARCH="$goarch" go build -ldflags "-s -w" -o "$bin" .
+            stage="$(mktemp -d)"
+            cp "$bin" LICENSE NOTICE README.md README.zh-CN.md "$stage/"
+            archive="cockpit-cli_${version}_${goos}_${goarch}"
+            if [ "$goos" = "windows" ]; then
+              (cd "$stage" && zip -q "$GITHUB_WORKSPACE/dist/${archive}.zip" ./*)
+            else
+              tar -C "$stage" -czf "dist/${archive}.tar.gz" .
+            fi
+            rm -rf "$stage" "$bin"
+          done
+          (
+            cd dist
+            sha256sum -- * > "cockpit-cli_${version}_checksums.txt"
+          )
+
+      - name: Upload to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: gh release upload "$RELEASE_TAG" dist/* --clobber
