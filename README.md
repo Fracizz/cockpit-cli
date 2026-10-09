@@ -22,6 +22,8 @@ CGO_ENABLED=0 go build -ldflags "-s -w" -o cockpit-cli .
 
 ```text
 cockpit-cli import share.json
+cockpit-cli export share.json
+cockpit-cli export --platform codex --target wsl codex.json
 cockpit-cli list --platform codex
 cockpit-cli switch codex user@example.com
 cockpit-cli switch --available codex
@@ -34,6 +36,18 @@ Inside WSL the Codex target is local: the command writes `/root/.codex/auth.json
 Cursor and Antigravity only update `state.vscdb`. Restart those apps yourself.
 
 Accounts are stored under `~/.cockpit-cli`. The index does not contain tokens. `COCKPIT_CLI_MAP` selects another mapping file. `COCKPIT_CLI_HOME` selects another store directory.
+
+`export` writes a `cockpit-tools.account-transfer` JSON file that `import` can read back. On Linux it also reads the Cockpit account store. On Windows, pass `--target wsl` to include that store. The file contains credentials and is written with mode `0600`.
+
+## Skill
+
+Agents install this repository as a skill and then run the commands above:
+
+```bash
+npx skills add Fracizz/cockpit-cli
+```
+
+The skill is [`skills/cockpit-cli/SKILL.md`](skills/cockpit-cli/SKILL.md).
 
 ## License
 

@@ -22,6 +22,8 @@ CGO_ENABLED=0 go build -ldflags "-s -w" -o cockpit-cli .
 
 ```text
 cockpit-cli import share.json
+cockpit-cli export share.json
+cockpit-cli export --platform codex --target wsl codex.json
 cockpit-cli list --platform codex
 cockpit-cli switch codex user@example.com
 cockpit-cli switch --available codex
@@ -34,6 +36,18 @@ cockpit-cli switch antigravity user@example.com --product ide
 Cursor 和反重力只更新 `state.vscdb`，需要自行重启对应程序。
 
 账号保存在 `~/.cockpit-cli`。索引不含令牌。`COCKPIT_CLI_MAP` 可改映射文件，`COCKPIT_CLI_HOME` 可改存储目录。
+
+`export` 写出 `cockpit-tools.account-transfer` JSON，可以直接再交给 `import`。在 Linux 上会同时读取 Cockpit 账号库；在 Windows 上加 `--target wsl`。文件里包含凭据，权限为 `0600`。
+
+## Skill
+
+代理可以用这条命令把本仓库安装成 skill，然后直接执行上面的命令：
+
+```bash
+npx skills add Fracizz/cockpit-cli
+```
+
+技能文件是 [`skills/cockpit-cli/SKILL.md`](skills/cockpit-cli/SKILL.md)。
 
 ## 许可证
 

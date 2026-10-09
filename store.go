@@ -20,6 +20,7 @@ type Account struct {
 	Product     string         `json:"product,omitempty"`
 	ImportedAt  int64          `json:"imported_at"`
 	Credentials map[string]any `json:"credentials"`
+	Raw         map[string]any `json:"-"`
 }
 
 type Index struct {

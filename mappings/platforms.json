@@ -12,10 +12,18 @@
     "platforms_key": "platforms",
     "payload_keys": ["exported_data", "data", "accounts"]
   },
+  "cockpit_store": {
+    "key_file": "secure-account-storage.key",
+    "targets": {
+      "linux": {"path": "/root/.antigravity_cockpit"},
+      "wsl": {"distro": "Ubuntu", "user": "root", "path": "/root/.antigravity_cockpit"}
+    }
+  },
   "platforms": {
     "codex": {
       "aliases": ["codex"],
       "bundle_keys": ["codex"],
+      "catalog": {"index": "codex_accounts.json", "dir": "codex_accounts"},
       "canonical": {
         "email": ["email"],
         "id": ["id"],
@@ -75,6 +83,7 @@
     "cursor": {
       "aliases": ["cursor"],
       "bundle_keys": ["cursor"],
+      "catalog": {"index": "cursor_accounts.json", "dir": "cursor_accounts"},
       "canonical": {
         "email": ["email", "cachedEmail"],
         "id": ["id"],
@@ -116,6 +125,7 @@
     "antigravity": {
       "aliases": ["antigravity", "antigravity_ide", "反重力"],
       "bundle_keys": ["antigravity", "antigravity_ide"],
+      "catalog": {"index": "accounts.json", "dir": "accounts"},
       "product_by_bundle_key": {
         "antigravity": "app",
         "antigravity_ide": "ide"

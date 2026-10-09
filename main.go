@@ -46,6 +46,29 @@ func run(args []string) error {
 		}
 		fmt.Println("store:", storeHome())
 		return nil
+	case "export":
+		fs := flag.NewFlagSet("export", flag.ContinueOnError)
+		platformName := fs.String("platform", "", "export one platform")
+		targetName := fs.String("target", "", "cockpit store to include: linux, wsl, or local")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if fs.NArg() != 1 {
+			return fmt.Errorf("usage: cockpit-cli export [--platform name] [--target linux|wsl|local] file.json")
+		}
+		exported, err := exportFile(fs.Arg(0), *platformName, *targetName)
+		if err != nil {
+			return err
+		}
+		for _, account := range exported {
+			line := fmt.Sprintf("exported %s %s", account.Platform, fallback(account.Email, account.ID))
+			if product := account.Product; product != "" {
+				line += " product=" + product
+			}
+			fmt.Println(line)
+		}
+		fmt.Println("wrote", fs.Arg(0))
+		return nil
 	case "list":
 		fs := flag.NewFlagSet("list", flag.ContinueOnError)
 		platformName := fs.String("platform", "", "filter by platform")
@@ -170,6 +193,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, `cockpit-cli imports Cockpit Tools share JSON and switches local accounts.
 
   cockpit-cli import [--platform name] file.json
+  cockpit-cli export [--platform name] [--target linux|wsl|local] file.json
   cockpit-cli list [--platform name] [--target wsl]
   cockpit-cli switch [--target name] [--product ide|app] [--no-restart] platform account
   cockpit-cli switch --available platform
