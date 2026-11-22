@@ -1,39 +1,34 @@
 # cockpit-cli
 
-[English](README.md)
+[English](README.md) · **简体中文**
 
-导入 [Cockpit Tools](https://github.com/jlcodes99/cockpit-tools) 分享的账号 JSON，并切换本机 Codex、Cursor 或反重力登录。字段映射在 [`mappings/platforms.json`](mappings/platforms.json)，和切号代码分开，后续同步只改这份文件。
+从 Cockpit Tools 导入账号分享文件，在命令行切换本机的 Codex、Cursor 或 Antigravity 登录。Codex 还可以根据可用额度选择账号。
 
-本程序派生自 [jlcodes99](https://github.com/jlcodes99) 的 [Cockpit Tools](https://github.com/jlcodes99/cockpit-tools)。
+[下载](https://github.com/Fracizz/cockpit-cli/releases/latest) · [快速开始](#快速开始) · [Agent Skill](#skill)
 
-本仓库和 Release 说明默认使用英文，此页为中文版本。
+项目派生自 [jlcodes99 的 Cockpit Tools](https://github.com/jlcodes99/cockpit-tools)。平台字段映射见 [platforms.json](mappings/platforms.json)。
 
 ## 下载
 
 GitHub Actions 会把压缩包挂到每个 Release。本机没有 `cockpit-cli` 时，skill 会下载对应的压缩包。
 
-https://github.com/Fracizz/cockpit-cli/releases/latest
-
 Windows 文件名是 `cockpit-cli_<version>_<os>_<arch>.zip`，Linux 和 macOS 是 `.tar.gz`，同时有 `cockpit-cli_<version>_checksums.txt`。
 
-## 构建
+## 快速开始
 
-```powershell
-go build -ldflags "-s -w" -o cockpit-cli.exe .
-```
+将解压出的二进制加入 PATH。用账号分享文件中的邮箱替换 `user@example.com`。
 
-```bash
-CGO_ENABLED=0 go build -ldflags "-s -w" -o cockpit-cli .
+```text
+cockpit-cli import share.json
+cockpit-cli list --platform codex
+cockpit-cli switch codex user@example.com
 ```
 
 ## 使用
 
 ```text
-cockpit-cli import share.json
 cockpit-cli export share.json
 cockpit-cli export --platform codex --target wsl codex.json
-cockpit-cli list --platform codex
-cockpit-cli switch codex user@example.com
 cockpit-cli switch --available codex
 cockpit-cli switch cursor user@example.com --target windows
 cockpit-cli switch antigravity user@example.com --product ide
@@ -46,6 +41,16 @@ Cursor 和反重力只更新 `state.vscdb`，需要自行重启对应程序。
 账号保存在 `~/.cockpit-cli`。索引不含令牌。`COCKPIT_CLI_MAP` 可改映射文件，`COCKPIT_CLI_HOME` 可改存储目录。
 
 `export` 写出 `cockpit-tools.account-transfer` JSON，可以直接再交给 `import`。在 Linux 上会同时读取 Cockpit 账号库；在 Windows 上加 `--target wsl`。文件里包含凭据，权限为 `0600`。
+
+## 构建
+
+```powershell
+go build -ldflags "-s -w" -o cockpit-cli.exe .
+```
+
+```bash
+CGO_ENABLED=0 go build -ldflags "-s -w" -o cockpit-cli .
+```
 
 ## Skill
 

@@ -1,39 +1,34 @@
 # cockpit-cli
 
-[中文](README.zh-CN.md)
+**English** · [简体中文](README.zh-CN.md)
 
-Import a [Cockpit Tools](https://github.com/jlcodes99/cockpit-tools) account-share JSON file and switch the local Codex, Cursor, or Antigravity login. Field mapping lives in [`mappings/platforms.json`](mappings/platforms.json), separate from the switch code, so later syncs can update that file.
+Import a Cockpit Tools account-share file and switch your local Codex, Cursor, or Antigravity login from the terminal. For Codex, the CLI can also choose an account with quota available.
 
-This program is derived from [Cockpit Tools](https://github.com/jlcodes99/cockpit-tools) by [jlcodes99](https://github.com/jlcodes99).
+[Download](https://github.com/Fracizz/cockpit-cli/releases/latest) · [Quick start](#quick-start) · [Agent Skill](#skill)
 
-English is the default language for this repository and its releases.
+Derived from [Cockpit Tools by jlcodes99](https://github.com/jlcodes99/cockpit-tools). Platform field mappings live in [platforms.json](mappings/platforms.json).
 
 ## Download
 
 GitHub Actions attaches archives to each release. The skill downloads the matching archive when `cockpit-cli` is not on `PATH`.
 
-https://github.com/Fracizz/cockpit-cli/releases/latest
-
 Assets are named `cockpit-cli_<version>_<os>_<arch>.zip` on Windows and `.tar.gz` on Linux and macOS, plus `cockpit-cli_<version>_checksums.txt`.
 
-## Build
+## Quick start
 
-```powershell
-go build -ldflags "-s -w" -o cockpit-cli.exe .
-```
+Put the extracted binary on your PATH. Replace `user@example.com` with the email from your account-share file.
 
-```bash
-CGO_ENABLED=0 go build -ldflags "-s -w" -o cockpit-cli .
+```text
+cockpit-cli import share.json
+cockpit-cli list --platform codex
+cockpit-cli switch codex user@example.com
 ```
 
 ## Use
 
 ```text
-cockpit-cli import share.json
 cockpit-cli export share.json
 cockpit-cli export --platform codex --target wsl codex.json
-cockpit-cli list --platform codex
-cockpit-cli switch codex user@example.com
 cockpit-cli switch --available codex
 cockpit-cli switch cursor user@example.com --target windows
 cockpit-cli switch antigravity user@example.com --product ide
@@ -46,6 +41,16 @@ Cursor and Antigravity only update `state.vscdb`. Restart those apps yourself.
 Accounts are stored under `~/.cockpit-cli`. The index does not contain tokens. `COCKPIT_CLI_MAP` selects another mapping file. `COCKPIT_CLI_HOME` selects another store directory.
 
 `export` writes a `cockpit-tools.account-transfer` JSON file that `import` can read back. On Linux it also reads the Cockpit account store. On Windows, pass `--target wsl` to include that store. The file contains credentials and is written with mode `0600`.
+
+## Build
+
+```powershell
+go build -ldflags "-s -w" -o cockpit-cli.exe .
+```
+
+```bash
+CGO_ENABLED=0 go build -ldflags "-s -w" -o cockpit-cli .
+```
 
 ## Skill
 
